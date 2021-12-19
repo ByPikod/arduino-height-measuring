@@ -4,6 +4,7 @@
 #define PIN_BUZZER 2
 #define PIN_ECHO 12 
 #define PIN_TRIG 11
+#define PIN_BTN 10
 
 const int rows = 20;
 const int columns = 4;
@@ -25,15 +26,15 @@ void setup() {
   lcd.init();
   lcd.backlight();
   
+  pinMode(PIN_BTN, INPUT_PULLUP);
   pinMode(PIN_BUZZER, OUTPUT);
   pinMode(PIN_TRIG, OUTPUT);
   pinMode(PIN_ECHO, INPUT);
-
-  setup_distance = get_distance();
   
-  typewriter("Is Adamlari MTAL", 1, 1000); 
-  print_center("Olcum bekleniyor", 1);
-
+  typewriter("Is Adamlari MTAL", 1, 1000);
+  print_center("Kalibrasyon", 1);
+  print_center("bekleniyor...", 2);
+  
   /*for(int i = 0; i < 3; i++){
    
     beep(100);
@@ -44,30 +45,48 @@ void setup() {
 }
 
 void loop() {
-
-  int distance = get_distance();
-  int diff = setup_distance - distance;
   
-  if(diff > 10){
+  int diff;
+  int distance;
+  int btn;
+  
+  while(true){
     
-    if(x) return;
+    delay(50);
+    
+    distance = get_distance();
+    diff = setup_distance - distance;
+    btn = digitalRead(PIN_BTN);
+    
+    if(diff < 200 && diff > 10) break;
+    if(btn == LOW) break;
+  
+  }
+  
+  if(btn == LOW){
+
     lcd.clear();
-    print_center("Boyunuz:", 1);
+    setup_distance = distance;
+    print_center("Kalibrasyon:", 1);
+    print_center(String(setup_distance), 2);
+    delay(1000);
+    
+  }else{
+
+    lcd.clear();
+    print_center("Boy:", 1);
     print_center(String(diff), 2);
     beep(200);
-    x = true;
-    return;
     
-  }else {
-
-    if(!x) return;
-    x = false;
-    lcd.clear();
-    print_center("Olcum bekleniyor", 1);
-
+    while(digitalRead(PIN_BTN) == HIGH)
+        delay(50);
+    
   }
-
-  delay(100);
+  
+  lcd.clear();
+  print_center("Olcum", 1);
+  print_center("bekleniyor...", 2);
+  delay(500);
   
 }
 
