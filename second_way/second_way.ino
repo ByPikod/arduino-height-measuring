@@ -66,7 +66,7 @@ void loop() {
   if(btn == LOW){
 
     lcd.clear();
-    setup_distance = distance;
+    setup_distance = distance + 4;
     print_center("Kalibrasyon:", 1);
     print_center(String(setup_distance), 2);
     delay(1000);
@@ -99,7 +99,7 @@ int get_distance(){
   digitalWrite(PIN_TRIG, LOW);
   long duration = pulseIn(PIN_ECHO, HIGH);
   int distance = duration * 0.034 / 2;
-  return distance + 4;
+  return distance;
   
 }
 
