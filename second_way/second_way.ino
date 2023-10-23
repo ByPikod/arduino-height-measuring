@@ -99,7 +99,7 @@ int get_distance(){
   digitalWrite(PIN_TRIG, LOW);
   long duration = pulseIn(PIN_ECHO, HIGH);
   int distance = duration * 0.034 / 2;
-  return distance;
+  return distance + 4;
   
 }
 
